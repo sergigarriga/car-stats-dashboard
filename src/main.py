@@ -505,12 +505,10 @@ def show_performance(data):
             xaxis_title='Date',
             yaxis=dict(
                 title='Consumption (kWh or L / 100km)',
-                titlefont=dict(color="#1f77b4"),
                 tickfont=dict(color="#1f77b4")
             ),
             yaxis2=dict(
                 title='Average Speed (km/h)',
-                titlefont=dict(color="#ff7f0e"),
                 tickfont=dict(color="#ff7f0e"),
                 overlaying='y',
                 side='right',
