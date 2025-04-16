@@ -16,7 +16,7 @@ car-stats-dashboard/
 │   │   └── menu.py         # Creates the Streamlit sidebar menu and filters
 │   ├── utils/              # Utility functions
 │   │   └── data_processing.py # Contains functions for data loading, cleaning, and transformation
-│   └── assets/
+│   └── data/
 │       └── car_stats.csv     # Default location for driving data
 ├── requirements.txt          # Project dependencies
 └── README.md                 # This file
@@ -39,7 +39,7 @@ car-stats-dashboard/
 
 ## Data Source & Format
 
-The application expects a CSV file named `car_stats.csv` located in the `src/assets/` directory by default.
+The application expects a CSV file named `car_stats.csv` located in the `src/data/` directory by default.
 
 The CSV file should contain columns representing trip data. Based on the typical processing steps, the expected columns (or similar) after initial loading are:
 
@@ -84,7 +84,7 @@ To run this project locally, ensure you have Python 3.8+ installed.
 
 ## Running the Application
 
-Ensure your `car_stats.csv` file is placed in the `src/assets/` directory.
+Ensure your `car_stats.csv` file is placed in the `src/data/` directory.
 
 Start the Streamlit application by running the following command in your terminal from the project's root directory:
 

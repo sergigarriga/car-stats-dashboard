@@ -150,7 +150,7 @@ def main():
                        page_icon="🚗", layout="wide")
 
     try:
-        file_path = "src/assets/car_stats.csv"
+        file_path = "src/data/car_stats.csv"
         raw_data = load_data(file_path)
         cleaned_data = clean_data(raw_data.copy())
         data = transform_data(cleaned_data)
