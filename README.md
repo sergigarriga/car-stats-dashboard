@@ -66,7 +66,6 @@ The CSV file should contain columns representing trip data. The `load_data` func
 - **Pandas:** Data manipulation and analysis.
 - **Plotly:** Interactive charting.
 - **Numpy:** Numerical operations.
-- **httpx & httpx-auth:** For making API calls in `ai_caller.py` (if using AI features).
 - **pytest & pytest-mock:** For running unit tests.
 
 ## Installation
@@ -75,8 +74,8 @@ To run this project locally:
 
 1. **Clone the repository:**
    ```bash
-   git clone <repository-url> # Replace <repository-url> with your repo URL
-   cd your-repo-name         # Replace with the actual folder name
+   git clone https://github.com/sergigarriga/car-stats-dashboard
+   cd car-stats-dashboard
    ```
 
 2. **Create and activate a virtual environment (Recommended):**
@@ -92,8 +91,6 @@ To run this project locally:
    ```bash
    pip install -r requirements.txt
    ```
-
-4. **(If using AI Features):** Configure API credentials needed by `src/utils/ai_caller.py`. It currently expects environment variables `CLIENT_ID` and `CLIENT_SECRET`. **Do not commit your actual secrets to Git.** Consider using a `.env` file and `python-dotenv` package, or other secrets management practices.
 
 ## Running the Application
 
