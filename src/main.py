@@ -36,7 +36,7 @@ def initialize_ai_model():
 
 
 @st.cache_data
-def generate_explanation(chart_description: str, summary_data: str, chart_type: str = "this chart"):
+def generate_explanation(AI_AVAILABLE: bool, chart_description: str, summary_data: str, chart_type: str = "this chart"):
     """Generates an explanation for a chart using the AI model."""
     logger.info(f"Generating explanation for {chart_type}.")
     if not AI_AVAILABLE:
@@ -235,7 +235,7 @@ def show_overview(data, gas_price, elec_price, gas_consumption_comp, elec_consum
         st.plotly_chart(timeline_fig, use_container_width=True)
         if st.button("🧠 Generate Explanation for Distance per Trip Chart", key="explain_chart_1"):
             st.markdown(generate_explanation(
-                chart_desc_1, summary_data_1 + f"\n\nData: {data_sorted[['datetime', 'distance']].to_dict(orient='records')}", "the distance per trip chart"))
+                AI_AVAILABLE, chart_desc_1, summary_data_1 + f"\n\nData: {data_sorted[['datetime', 'distance']].to_dict(orient='records')}", "the distance per trip chart"))
 
         chart_desc_2 = "Line chart showing how the total distance traveled (Y-axis, in km) accumulates over time (X-axis)."
         summary_data_2 = f"Total distance covered in period: {data_sorted['distance'].sum()} km. Period start date: {data_sorted['datetime'].min().date()}. Period end date: {data_sorted['datetime'].max().date()}."
@@ -965,6 +965,9 @@ def main():
     st.set_page_config(page_title="Hybrid Car Statistics",
                        page_icon="🚗", layout="wide")
     logger.info("Starting the application.")
+
+    global AI_AVAILABLE
+    global ask_ia_model
 
     AI_AVAILABLE, ask_ia_model = initialize_ai_model()
 
