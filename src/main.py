@@ -15,20 +15,24 @@ logging.basicConfig(level=logging.INFO,
                     format="%(asctime)s - %(levelname)s - %(message)s")
 logger = logging.getLogger(__name__)
 
-try:
-    from utils.ai_caller import ask_ia_model
-    AI_AVAILABLE = True
-except ImportError:
-    AI_AVAILABLE = False
-    st.warning(
-        "AI model is not available. Some features may be limited.", icon="⚠️")
-    logger.warning("AI model is not available.")
 
-    def ask_ia_model(prompt: str, model: str = "gpt-4o", max_tokens: int = 1000, temperature: float = 0.1):
-        return {
-            "error": "Function ask_ia_model is not available.",
-            "choices": [{"message": {"content": "Error: The AI function is not available."}}]
-        }
+def initialize_ai_model():
+    """Initialize the AI model and handle its availability."""
+    try:
+        from utils.ai_caller import ask_ia_model
+        AI_AVAILABLE = True
+    except ImportError:
+        AI_AVAILABLE = False
+        st.warning(
+            "AI model is not available. Some features may be limited.", icon="⚠️")
+        logger.warning("AI model is not available.")
+
+        def ask_ia_model(prompt: str, model: str = "gpt-4o", max_tokens: int = 1000, temperature: float = 0.1):
+            return {
+                "error": "Function ask_ia_model is not available.",
+                "choices": [{"message": {"content": "Error: The AI function is not available."}}]
+            }
+    return AI_AVAILABLE, ask_ia_model
 
 
 @st.cache_data
@@ -958,9 +962,11 @@ def show_predictions(all_data, gas_price, elec_price):
 
 
 def main():
-    logger.info("Starting the application.")
     st.set_page_config(page_title="Hybrid Car Statistics",
                        page_icon="🚗", layout="wide")
+    logger.info("Starting the application.")
+
+    AI_AVAILABLE, ask_ia_model = initialize_ai_model()
 
     try:
         file_path = "src/data/car_stats.csv"
