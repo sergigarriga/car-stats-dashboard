@@ -1,4 +1,4 @@
-# src/components/menu.py
+import os
 from datetime import timedelta
 
 import pandas as pd
@@ -8,8 +8,26 @@ import streamlit as st
 def create_menu(data):
     """Create the sidebar menu and filters for the Streamlit app."""
     st.sidebar.title("Control Panel 🚗")
+
+    # --- File Upload ---
+    st.sidebar.subheader("Upload Your Data")
+    uploaded_file = st.sidebar.file_uploader(
+        "Upload a CSV file", type=["csv"], key="file_uploader"
+    )
+    if uploaded_file is not None:
+        try:
+            data = pd.read_csv(uploaded_file)
+            data.to_csv(
+                os.path.join("src", "data", "car_stats.csv"), index=False
+            )
+            st.sidebar.success("File uploaded successfully!")
+        except Exception as e:
+            st.sidebar.error(f"Error reading file: {e}")
+            data = pd.DataFrame()  # Reset to empty DataFrame if error occurs
+
+    # --- Navigation ---
     options = ["Overview", "Consumption Analysis",
-               "Trip Details", "Performance Metrics", "Data Explorer"]
+               "Trip Details", "Performance Metrics", "Predictions", "Data Explorer"]
     selection = st.sidebar.radio("Navigation", options)
 
     # --- Date Filter ---
@@ -68,22 +86,52 @@ def create_menu(data):
     st.sidebar.info(f"Showing {len(filtered_data)} of {len(data)} trips")
 
     # --- Savings Calculation Parameters ---
-    st.sidebar.markdown("---")  # Separator
-    st.sidebar.subheader("Savings Comparison Parameters")
+    st.sidebar.markdown("---")
+    with st.sidebar.expander("Savings Comparison Parameters", expanded=False):
+        st.subheader("Savings Comparison Parameters")
 
-    # Use unique keys for widgets
-    gas_price_input = st.sidebar.number_input(
-        "Gasoline Price (€/L)", min_value=0.1, max_value=3.0, value=1.55, step=0.01, format="%.2f", key="gas_price"
-    )
-    elec_price_input = st.sidebar.number_input(
-        "Electricity Price (€/kWh)", min_value=0.01, max_value=1.0, value=0.18, step=0.01, format="%.3f", key="elec_price"
-    )
-    gas_consumption_input = st.sidebar.number_input(
-        "Gasoline Car Consumption (L/100km)", min_value=1.0, max_value=20.0, value=6.5, step=0.1, format="%.1f", key="gas_comp"
-    )
-    elec_consumption_input = st.sidebar.number_input(
-        "Electric Car Consumption (kWh/100km)", min_value=5.0, max_value=40.0, value=17.0, step=0.1, format="%.1f", key="elec_comp"
-    )
+        # Initialize session state for parameters if not already set
+        if "gas_price" not in st.session_state:
+            st.session_state["gas_price"] = 1.55
+        if "elec_price" not in st.session_state:
+            st.session_state["elec_price"] = 0.18
+        if "gas_comp" not in st.session_state:
+            st.session_state["gas_comp"] = 6.5
+        if "elec_comp" not in st.session_state:
+            st.session_state["elec_comp"] = 17.0
+
+        # Use session state for inputs and update session state on change
+        st.session_state["gas_price"] = st.number_input(
+            "Gasoline Price (€/L)",
+            min_value=0.1, max_value=3.0,
+            value=st.session_state["gas_price"],
+            step=0.01, format="%.2f",
+            key="gas_price_input"
+        )
+
+        st.session_state["elec_price"] = st.number_input(
+            "Electricity Price (€/kWh)",
+            min_value=0.01, max_value=1.0,
+            value=st.session_state["elec_price"],
+            step=0.01, format="%.3f",
+            key="elec_price_input"
+        )
+
+        st.session_state["gas_comp"] = st.number_input(
+            "Gasoline Car Consumption (L/100km)",
+            min_value=1.0, max_value=20.0,
+            value=st.session_state["gas_comp"],
+            step=0.1, format="%.1f",
+            key="gas_comp_input"
+        )
+
+        st.session_state["elec_comp"] = st.number_input(
+            "Electric Car Consumption (kWh/100km)",
+            min_value=5.0, max_value=40.0,
+            value=st.session_state["elec_comp"],
+            step=0.1, format="%.1f",
+            key="elec_comp_input"
+        )
 
     # Return all necessary values for main.py
-    return selection, filtered_data, gas_price_input, elec_price_input, gas_consumption_input, elec_consumption_input
+    return selection, filtered_data, st.session_state["gas_price"], st.session_state["elec_price"], st.session_state["gas_comp"], st.session_state["elec_comp"]

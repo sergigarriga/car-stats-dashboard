@@ -4,3 +4,5 @@ matplotlib
 seaborn
 plotly
 statsmodels
+pytest
+pytest-mock
